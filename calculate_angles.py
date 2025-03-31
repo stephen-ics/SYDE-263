@@ -1,43 +1,43 @@
 import math
 
-length_CD = 86.60 # Length CD
-length_DE = 73.35 # Length DE
-length_E_to_Claw = 121.20 # 121.20 , E to Claw
-length_BC = 95.75 # BC
-length_AB = 87.70 # Length AB
-length_AE = 168.50 # Length AE
+Lab = 86.60
+Lbe = 73.35
+Lef = 120.20
+Lac = 95.75
+Lcd = 87.70 
+Lde = 168.50
+
+deltaW = 0
+deltaL = 0
 
 Y = 113.857
 X = 249.843
 
 # THIS IS THETA
-length_AP = math.sqrt(X**2 + (length_BC - Y)**2)
-angle_yap = math.degrees(math.atan(X / abs(length_BC - Y)))
-length_BP = math.sqrt((length_DE + length_E_to_Claw)**2)
-angle_pab = math.degrees(math.acos((length_AP**2 + length_CD**2 - length_BP**2) / (2 * length_AP * length_CD)))
-theta = 180 - angle_yap - angle_pab
+lap = math.sqrt(X**2 + (Lac - Y)**2)
+deg_yap = math.degrees(math.atan(X / abs(Lac - Y)))
+Lbp = math.sqrt(deltaW**2 + (Lbe + Lef + deltaL)**2)
+deg_pab = math.degrees(math.acos((lap**2 + Lab**2 - Lbp**2) / (2 * lap * Lab)))
+theta = 180 - deg_yap - deg_pab
 
 # THIS IS PHI
-angle_abp = math.degrees(math.asin((length_AP / length_BP) * math.sin(math.radians(angle_pab))))
-angle_cab = angle_yap + angle_pab
+deg_abp = math.degrees(math.asin((lap / Lbp) * math.sin(math.radians(deg_pab))))
+deg_pbf = math.degrees(math.atan(deltaW/(Lbe + Lef + deltaL)))
+deg_abe = deg_abp + deg_pbf
+deg_cab = deg_yap + deg_pab
 
-length_BC = math.sqrt(length_BC**2 + length_CD**2 - (2 * length_BC * length_CD * math.cos(math.radians(angle_cab))))
-print("lengthBC", length_BC)
-phi_1 = math.degrees(math.asin((length_CD/length_BC) * math.sin(math.radians(angle_cab))))
+lbc = math.sqrt(Lac**2 + Lab**2 - (2 * Lac * Lab * math.cos(math.radians(deg_cab))))
+phi_1 = math.degrees(math.asin((Lab/lbc) * math.sin(math.radians(deg_cab))))
 
-angle_abc = 180 - phi_1 - angle_cab
-angle_cbe = angle_abp - angle_abc
+deg_abc = 180 - phi_1 - deg_cab
+deg_cbe = deg_abe - deg_abc
 
-length_CE = math.sqrt(length_BC**2 + length_DE**2 - (2 * length_BC * length_DE * math.cos(math.radians(angle_cbe))))
+lce = math.sqrt(lbc**2 + Lbe**2 - (2 * lbc * Lbe * math.cos(math.radians(deg_cbe))))
 
-phi_2 = math.degrees(math.asin((length_DE/length_CE) * math.sin(math.radians(angle_cbe))))
-phi_3 = math.degrees(math.acos((length_CE**2 + length_AB**2 - length_AE**2)/(2 * length_CE * length_AB)))
+phi_2 = math.degrees(math.asin((Lbe/lce) * math.sin(math.radians(deg_cbe))))
+phi_3 = math.degrees(math.acos((lce**2 + Lcd**2 - Lde**2)/(2 * lce * Lcd)))
 
 phi = phi_1 + phi_2 + phi_3
-
-print("PHI1, ", phi_1)
-print("PHI2, ", phi_2)
-print("PHI3, ", phi_3)
 
 print("THETA ", theta)
 print("PHI ", phi)
