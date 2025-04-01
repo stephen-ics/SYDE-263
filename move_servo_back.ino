@@ -1,29 +1,22 @@
 #include <Servo.h>
 
-// --- Servo Objects & Global Variables ---
 Servo gripper;
 Servo ax1;
 Servo ax2;
 
-// Communication pins for Arduino2 (Slave)
-// These are swapped relative to Arduino1:
-// Outgoing pins: 7 & 8; Incoming pins: 5 & 6.
-const int comm_outPin0 = 7;  // sends bit0 to Arduino1 (wired from Arduino2 pin 7 -> Arduino1 pin 5)
-const int comm_outPin1 = 8;  // sends bit1 to Arduino1 (wired from Arduino2 pin 8 -> Arduino1 pin 6)
-const int comm_inPin0  = 5;  // reads bit0 from Arduino1 (wired from Arduino1 pin 5 -> Arduino2 pin 5)
-const int comm_inPin1  = 6;  // reads bit1 from Arduino1 (wired from Arduino1 pin 6 -> Arduino2 pin 6)
+const int comm_outPin0 = 7;  // sends bit0 to Arduino1
+const int comm_outPin1 = 8;  // sends bit1 to Arduino1
+const int comm_inPin0  = 5;  // reads bit0 from Arduino1
+const int comm_inPin1  = 6;  // reads bit1 from Arduino1
 
-// Gripper positions
 int gr_open = 40;
 int gr_close = 100;
 
-// Home positions (servo angles in degrees)
 const float HOME_AX1 = 40;
 const float HOME_AX2 = 108;
 float ax1_current = HOME_AX1;
 float ax2_current = HOME_AX2;
 
-// Hardcoded target positions (servo angles) for each target:
 // Target 1:
 const float t1ax1 = 40;
 const float t1ax2 = 108;
@@ -52,14 +45,10 @@ void moveTopos(float start1, float end1, float start2, float end2) {
   ax2_current = end2;
 }
 
-// Move to a position given by two servo angles.
 void moveToPosition(float targetAx1, float targetAx2) {
   moveTopos(ax1_current, targetAx1, ax2_current, targetAx2);
 }
 
-// --- Communication Functions ---
-// Broadcast a target state using 2 bits.
-// Mapping: Target 1 = 00, Target 2 = 01, Target 3 = 10.
 void setTargetState(int target) {
   int bit0 = 0;
   int bit1 = 0;
@@ -73,7 +62,6 @@ void setTargetState(int target) {
   digitalWrite(comm_outPin1, bit1);
 }
 
-// Read the 2‑bit state coming from Arduino1.
 int readTargetState() {
   int b0 = digitalRead(comm_inPin0);
   int b1 = digitalRead(comm_inPin1);
@@ -84,7 +72,6 @@ int readTargetState() {
   return 0;
 }
 
-// --- Setup ---
 void setup() {
   Serial.begin(9600);
   gripper.attach(9);
@@ -102,17 +89,15 @@ void setup() {
   ax2.write(ax2_current);
   gripper.write(gr_open);
   
-  // Initialize with a default state (Target 1)
   setTargetState(1);
   
-  Serial.println("Slave Arduino Initialized");
-  Serial.println("Waiting for current object state from Master...");
+  Serial.println("Back Arduino Initialized");
 }
 
-// --- Main Loop ---
 void loop() {
   int sourceState = readTargetState();
   
+  Serial.println("Front Servo");
   Serial.print("Current object location (source state): Target ");
   Serial.println(sourceState);
 
@@ -147,28 +132,28 @@ void loop() {
     dropAx2 = t3ax2; 
   }
   
-  Serial.println("Moving to pickup position...");
+  Serial.println("Moving to pickup position");
   moveToPosition(pickupAx1, pickupAx2);
   delay(500);
   
-  Serial.println("Picking up object...");
+  Serial.println("Picking up object");
   gripper.write(gr_close);
   delay(1000);
   
-  Serial.println("Moving to drop-off position...");
+  Serial.println("Moving to drop-off position");
   moveToPosition(dropAx1, dropAx2);
   delay(500);
   
-  Serial.println("Dropping object...");
+  Serial.println("Dropping object");
   gripper.write(gr_open);
   delay(1000);
   
-  Serial.println("Returning to home position...");
+  Serial.println("Returning to home position");
   moveToPosition(HOME_AX1, HOME_AX2);
   delay(500);
   
   setTargetState(dropTarget);
-  Serial.print("New object location set to Target ");
+  Serial.print("New object location set to Target");
   Serial.println(dropTarget);
   
   delay(3000);
