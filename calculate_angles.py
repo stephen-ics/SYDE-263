@@ -1,82 +1,45 @@
 import math
 
-Lab = 86.60
-Lbe = 73.35
-Lef = 121.20
-Lac = 95.75
-Lcd = 87.70 
-Lde = 168.50
+length_ab = 86.60
+length_be = 73.35
+length_ef = 121.20
+length_ac = 95.75
+length_cd = 87.70 
+length_de = 168.50
 
 deltaW = 0
 deltaL = 0
 
-Y = 250
-X = 148.5
-
-# Lab = 86.41
-# Lbe = 73.47
-# Lef = 121.20
-# Lac = 116.97
-# Lcd = 85.34
-# Lde = 165.50
-
-# deltaW = 17.77
-# deltaL = 0
-
-# Y = 220
-# X = 22.75 
-
-# t1_y = 25 cm
-# t1_x = 35.27 mm
-# --> 105.94, 125.26
-
-# t2_x = 87.5 mm
-# t2_y = 25 cm
-# --> 102.48, 105.19
-
-# t3_x = 148.5 mm
-# t3_y = 25 cm
-# --> 110.78, 99.36
-
-# t1_y = 220 mm
-# t1_x = 85.25 mm
-# --> 63.58, 100.43
-
-# t2_x = 22.75 mm
-# t2_y = 220 mm
-# --> 
-
-# t3_x = -38.25
-# t3_y = 220 mm
-# --> 
+Y = 120
+X = 240
 
 # THIS IS THETA
-lap = math.sqrt(X**2 + (Lac - Y)**2) # hypotenuse
-deg_yap = math.degrees(math.atan(X / abs(Lac - Y))) # inverse tan
-Lbp = math.sqrt(deltaW**2 + (Lbe + Lef + deltaL)**2) 
-deg_pab = math.degrees(math.acos((lap**2 + Lab**2 - Lbp**2) / (2 * lap * Lab)))
-theta = 180 - deg_yap - deg_pab
+length_ap = math.sqrt(X**2 + (length_ac - Y)**2) # hypotenuse
+angle_yap = math.degrees(math.atan(X / abs(length_ac - Y))) # inverse tan
+Lbp = math.sqrt(deltaW**2 + (length_be + length_ef + deltaL)**2) 
+angle_pab = math.degrees(math.acos((length_ap**2 + length_ab**2 - Lbp**2) / (2 * length_ap * length_ab)))
+theta = 180 - angle_yap - angle_pab
 
 # THIS IS PHI
-deg_abp = math.degrees(math.asin((lap / Lbp) * math.sin(math.radians(deg_pab)))) # sine law
-deg_pbf = math.degrees(math.atan(deltaW/(Lbe + Lef + deltaL))) # tan
-deg_abe = deg_abp + deg_pbf
-deg_cab = deg_yap + deg_pab
+angle_abp = math.degrees(math.asin((length_ap / Lbp) * math.sin(math.radians(angle_pab)))) # sine law
+angle_pbf = math.degrees(math.atan(deltaW/(length_be + length_ef + deltaL))) # tan
+angle_abe = angle_abp + angle_pbf
+angle_cab = angle_yap + angle_pab
 
-lbc = math.sqrt(Lac**2 + Lab**2 - (2 * Lac * Lab * math.cos(math.radians(deg_cab))))
-phi_1 = math.degrees(math.asin((Lab/lbc) * math.sin(math.radians(deg_cab))))
+lbc = math.sqrt(length_ac**2 + length_ab**2 - (2 * length_ac * length_ab * math.cos(math.radians(angle_cab))))
+phi_1 = math.degrees(math.asin((length_ab/lbc) * math.sin(math.radians(angle_cab))))
 
-deg_abc = 180 - phi_1 - deg_cab
-deg_cbe = deg_abe - deg_abc
+angle_abc = 180 - phi_1 - angle_cab
+angle_cbe = angle_abe - angle_abc
 
-lce = math.sqrt(lbc**2 + Lbe**2 - (2 * lbc * Lbe * math.cos(math.radians(deg_cbe))))
+lce = math.sqrt(lbc**2 + length_be**2 - (2 * lbc * length_be * math.cos(math.radians(angle_cbe))))
 
-phi_2 = math.degrees(math.asin((Lbe/lce) * math.sin(math.radians(deg_cbe))))
-phi_3 = math.degrees(math.acos((lce**2 + Lcd**2 - Lde**2)/(2 * lce * Lcd)))
+phi_2 = math.degrees(math.asin((length_be/lce) * math.sin(math.radians(angle_cbe))))
+phi_3 = math.degrees(math.acos((lce**2 + length_cd**2 - length_de**2)/(2 * lce * length_cd)))
 
 phi = phi_1 + phi_2 + phi_3
 
-theta += 40
+theta += 40 # account for offset of servos
 phi -= 72
 
 print("THETA ", theta)

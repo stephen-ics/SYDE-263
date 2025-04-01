@@ -91,21 +91,22 @@ void setup() {
   
   setTargetState(1);
   
-  Serial.println("Front Arduino Initialized");
+  Serial.println("Front Arduino");
 }
 
 void loop() {
   int sourceState = readTargetState();
   
   Serial.println("Front Servo");
-  Serial.print("Current object location (source state): Target ");
+  Serial.print("Current object location: ");
   Serial.println(sourceState);
 
-  Serial.println("Enter drop-off target number:");
+  Serial.println("Enter drop off location:");
 
   while (Serial.available() == 0) {}
+
   int dropTarget = Serial.parseInt();
-  Serial.print("Selected drop-off target: ");
+  Serial.print("Selected drop off location: ");
   Serial.println(dropTarget);
   
   float pickupAx1, pickupAx2, dropAx1, dropAx2;
@@ -132,7 +133,7 @@ void loop() {
     dropAx2 = t3ax2; 
   }
   
-  Serial.println("Moving to pickup position");
+  Serial.println("Moving to pickup location");
   moveToPosition(pickupAx1, pickupAx2);
   delay(500);
   
@@ -140,7 +141,7 @@ void loop() {
   gripper.write(gr_close);
   delay(1000);
   
-  Serial.println("Moving to drop-off position");
+  Serial.println("Moving to drop off location");
   moveToPosition(dropAx1, dropAx2);
   delay(500);
   
@@ -148,7 +149,7 @@ void loop() {
   gripper.write(gr_open);
   delay(1000);
   
-  Serial.println("Returning to home position");
+  Serial.println("Returning to home location");
   moveToPosition(HOME_AX1, HOME_AX2);
   delay(500);
   

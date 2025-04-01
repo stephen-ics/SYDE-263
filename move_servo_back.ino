@@ -17,13 +17,15 @@ const float HOME_AX2 = 108;
 float ax1_current = HOME_AX1;
 float ax2_current = HOME_AX2;
 
-// Target 1:
+// Target 1
 const float t1ax1 = 40;
 const float t1ax2 = 108;
-// Target 2:
+
+// Target 2
 const float t2ax1 = 60;
 const float t2ax2 = 90;
-// Target 3:
+
+// Target 3
 const float t3ax1 = 80;
 const float t3ax2 = 70;
 
@@ -41,6 +43,7 @@ void moveTopos(float start1, float end1, float start2, float end2) {
     ax2.write(pos2);
     delay(25);
   }
+
   ax1_current = end1;
   ax2_current = end2;
 }
@@ -58,6 +61,7 @@ void setTargetState(int target) {
     case 3: bit0 = 0; bit1 = 1; break;
     default: bit0 = 0; bit1 = 0; break;
   }
+
   digitalWrite(comm_outPin0, bit0);
   digitalWrite(comm_outPin1, bit1);
 }
@@ -69,6 +73,7 @@ int readTargetState() {
   if (b0 == 0 && b1 == 0) return 1;
   if (b0 == 1 && b1 == 0) return 2;
   if (b0 == 0 && b1 == 1) return 3;
+
   return 0;
 }
 
@@ -91,21 +96,21 @@ void setup() {
   
   setTargetState(1);
   
-  Serial.println("Back Arduino Initialized");
+  Serial.println("Back Arduino");
 }
 
 void loop() {
   int sourceState = readTargetState();
   
-  Serial.println("Front Servo");
-  Serial.print("Current object location (source state): Target ");
+  Serial.print("Current object location: ");
   Serial.println(sourceState);
 
-  Serial.println("Enter drop-off target number:");
+  Serial.println("Enter drop off location:");
 
-  while (Serial.available() == 0) {}
+  while (Serial.available() == 0) {} // wait for serial input
+
   int dropTarget = Serial.parseInt();
-  Serial.print("Selected drop-off target: ");
+  Serial.print("Selected drop off location: ");
   Serial.println(dropTarget);
   
   float pickupAx1, pickupAx2, dropAx1, dropAx2;
@@ -132,7 +137,7 @@ void loop() {
     dropAx2 = t3ax2; 
   }
   
-  Serial.println("Moving to pickup position");
+  Serial.println("Moving to pickup location");
   moveToPosition(pickupAx1, pickupAx2);
   delay(500);
   
@@ -140,7 +145,7 @@ void loop() {
   gripper.write(gr_close);
   delay(1000);
   
-  Serial.println("Moving to drop-off position");
+  Serial.println("Moving to drop off location");
   moveToPosition(dropAx1, dropAx2);
   delay(500);
   
@@ -148,7 +153,7 @@ void loop() {
   gripper.write(gr_open);
   delay(1000);
   
-  Serial.println("Returning to home position");
+  Serial.println("Returning to home location");
   moveToPosition(HOME_AX1, HOME_AX2);
   delay(500);
   
